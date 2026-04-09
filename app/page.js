@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useFormState } from '@/components/FormStateProvider';
 import HeroPreview from '@/components/HeroPreview';
 import OfferPreview from '@/components/OfferPreview';
+import SeoPreview from '@/components/SeoPreview';
 
 // ─── Small UI helpers ──────────────────────────────────────────────────────────
 
@@ -166,9 +167,10 @@ function toSlug(str) {
 
 // ─── Asset uploader ────────────────────────────────────────────────────────────
 
-async function uploadFile(file) {
+async function uploadFile(file, folderType = 'image') {
   const fd = new FormData();
   fd.append('file', file);
+  fd.append('folderType', folderType);
   const res = await fetch('/api/upload-asset', { method: 'POST', body: fd });
   const json = await res.json();
   if (!res.ok) throw new Error(json.error || 'Upload failed');
@@ -226,9 +228,9 @@ export default function CreatePartnerPage() {
       setStatus('uploading');
 
       const [eyebrow, splitImage, ogImage] = await Promise.all([
-        eyebrowFile ? uploadFile(eyebrowFile) : Promise.resolve(null),
-        splitImageFile ? uploadFile(splitImageFile) : Promise.resolve(null),
-        ogImageFile ? uploadFile(ogImageFile) : Promise.resolve(null),
+        eyebrowFile ? uploadFile(eyebrowFile, 'image') : Promise.resolve(null),
+        splitImageFile ? uploadFile(splitImageFile, 'image') : Promise.resolve(null),
+        ogImageFile ? uploadFile(ogImageFile, 'og') : Promise.resolve(null),
       ]);
 
       setStatus('creating');
@@ -324,33 +326,40 @@ export default function CreatePartnerPage() {
           </div>
         </SectionCard>
 
-        {/* SEO */}
-        <SectionCard title="SEO" description="Applies to title tags, Open Graph, and Twitter cards.">
-          <div>
-            <Label required>SEO Title</Label>
-            <Input
-              value={seoTitle}
-              onChange={(e) => setSeoTitle(e.target.value)}
-              placeholder="Rho | Partner Name perks"
-              required
-            />
+        {/* SEO — form left, preview right */}
+        <div className="flex gap-6 items-start">
+          <div className="w-96 flex-shrink-0">
+            <SectionCard title="SEO" description="Applies to title tags, Open Graph, and Twitter cards.">
+              <div>
+                <Label required>SEO Title</Label>
+                <Input
+                  value={seoTitle}
+                  onChange={(e) => setSeoTitle(e.target.value)}
+                  placeholder="Rho | Partner Name perks"
+                  required
+                />
+              </div>
+              <div>
+                <Label required>Meta Description</Label>
+                <Textarea
+                  value={seoDescription}
+                  onChange={(e) => setSeoDescription(e.target.value)}
+                  required
+                />
+              </div>
+              <ImageUploadField
+                label="Open Graph Image"
+                hint="Upload the OG image from the Asset Generator. Recommended 2400×1260 JPG."
+                value={ogImageFile}
+                onChange={setOgImageFile}
+                accept="image/*"
+              />
+            </SectionCard>
           </div>
-          <div>
-            <Label required>Meta Description</Label>
-            <Textarea
-              value={seoDescription}
-              onChange={(e) => setSeoDescription(e.target.value)}
-              required
-            />
+          <div className="flex-1 min-w-0 sticky top-6">
+            <SeoPreview />
           </div>
-          <ImageUploadField
-            label="Open Graph Image"
-            hint="Upload the OG image from the Asset Generator. Recommended 2400×1260 JPG."
-            value={ogImageFile}
-            onChange={setOgImageFile}
-            accept="image/*"
-          />
-        </SectionCard>
+        </div>
 
         {/* Hero — form left, preview right */}
         <div className="flex gap-6 items-start">
