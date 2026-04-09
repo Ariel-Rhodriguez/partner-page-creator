@@ -54,6 +54,7 @@ function SectionCard({ title, description, children }) {
 
 function ImageUploadField({ label, hint, required, value, onChange, accept = 'image/*' }) {
   const inputRef = useRef(null);
+  const previewUrl = value ? URL.createObjectURL(value) : null;
 
   return (
     <div>
@@ -62,9 +63,11 @@ function ImageUploadField({ label, hint, required, value, onChange, accept = 'im
       <div className="mt-2">
         {value ? (
           <div className="flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 px-3 py-2">
-            <svg className="h-4 w-4 flex-shrink-0 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
+            <img
+              src={previewUrl}
+              alt="preview"
+              className="h-10 w-10 flex-shrink-0 rounded object-contain bg-white border border-green-100"
+            />
             <span className="truncate text-xs text-green-800">{value.name}</span>
             <button
               type="button"
