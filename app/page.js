@@ -212,6 +212,16 @@ export default function CreatePartnerPage() {
     setError('');
     setResult(null);
 
+    if (!splitImageFile) {
+      setError('Partner logo (dark) is required. Please upload it in the Offer Details section.');
+      return;
+    }
+
+    if (!offerBullets.some((b) => b.trim())) {
+      setError('At least one incentive bullet is required in the Offer Details section.');
+      return;
+    }
+
     try {
       setStatus('uploading');
 
@@ -387,6 +397,7 @@ export default function CreatePartnerPage() {
               <ImageUploadField
                 label="Partner Logo — Dark (Split Column Image)"
                 hint="Upload the dark-background logo from the Asset Generator."
+                required
                 value={splitImageFile}
                 onChange={setSplitImageFile}
                 accept="image/*"

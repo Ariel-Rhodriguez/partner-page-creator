@@ -15,8 +15,9 @@ export async function POST(request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  let body;
   try {
-    const body = await request.json();
+    body = await request.json();
     const { inputs, assets } = body;
 
     const required = ['partnerName', 'slug', 'seoTitle', 'seoDescription', 'heroHeading', 'offerAmount', 'offerDays'];
@@ -41,6 +42,13 @@ export async function POST(request) {
     });
   } catch (err) {
     console.error('[create-partner-page]', err);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    const message = err.message ?? '';
+    if (message.toLowerCase().includes('slug')) {
+      return NextResponse.json(
+        { error: `A partner page with the slug "${body?.inputs?.slug}" already exists. Please choose a different slug.` },
+        { status: 422 },
+      );
+    }
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

@@ -27,9 +27,12 @@ export default function HeroPreview() {
   return (
     <div className="rounded-xl border border-gray-200 overflow-hidden mb-6">
       {/* Label bar */}
-      <div className="bg-gray-50 border-b border-gray-200 px-4 py-1.5 flex items-center gap-2">
-        <span className="text-[10px] font-semibold tracking-widest uppercase text-gray-400">Preview</span>
-        <span className="text-[10px] text-gray-300">— Hero Section</span>
+      <div className="bg-gray-50 border-b border-gray-200 px-4 py-1.5 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-semibold tracking-widest uppercase text-gray-400">Preview</span>
+          <span className="text-[10px] text-gray-300">— Hero Section</span>
+        </div>
+        <span className="text-[10px] text-gray-400 italic">This is an approximate preview — the live page may render slightly differently.</span>
       </div>
 
       {/* Hero body */}
