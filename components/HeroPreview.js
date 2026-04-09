@@ -42,7 +42,7 @@ export default function HeroPreview() {
             <img
               src={eyebrowUrl}
               alt="Eyebrow logo"
-              className="max-h-10 w-auto mx-auto mb-6 block"
+              className="max-h-6 w-auto mx-auto mb-6 block"
             />
           )}
 
