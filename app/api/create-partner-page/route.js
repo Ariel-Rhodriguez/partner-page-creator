@@ -1,12 +1,17 @@
-import { getServerSession } from 'next-auth';
+import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 import { buildPartnerStoryContent } from '@/lib/buildStory';
 import { createPartnerStory, fetchTemplateStory } from '@/lib/storyblok';
 
+function isAuthenticated() {
+  const jar = cookies();
+  const session = jar.get('ppc_session');
+  return session?.value === process.env.AUTH_PASSWORD;
+}
+
 export async function POST(request) {
-  const session = await getServerSession();
-  if (!session) {
+  if (!isAuthenticated()) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -14,7 +19,6 @@ export async function POST(request) {
     const body = await request.json();
     const { inputs, assets } = body;
 
-    // Validate required fields
     const required = ['partnerName', 'slug', 'seoTitle', 'seoDescription', 'heroHeading', 'offerAmount', 'offerDays'];
     for (const key of required) {
       if (!inputs?.[key]) {
@@ -33,11 +37,7 @@ export async function POST(request) {
 
     return NextResponse.json({
       ok: true,
-      story: {
-        id: story.id,
-        name: story.name,
-        full_slug: story.full_slug,
-      },
+      story: { id: story.id, name: story.name, full_slug: story.full_slug },
     });
   } catch (err) {
     console.error('[create-partner-page]', err);

@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
 
+const COOKIE = 'ppc_session';
 const PUBLIC_PATHS = ['/login', '/api/auth'];
 
 export function proxy(request) {
   const { pathname } = request.nextUrl;
 
-  // Allow public paths and static assets
   const isPublic =
     PUBLIC_PATHS.some((p) => pathname.startsWith(p)) ||
     pathname.startsWith('/_next') ||
@@ -13,12 +13,10 @@ export function proxy(request) {
 
   if (isPublic) return NextResponse.next();
 
-  // Check for a NextAuth session cookie (secure or non-secure)
-  const sessionCookie =
-    request.cookies.get('__Secure-next-auth.session-token') ||
-    request.cookies.get('next-auth.session-token');
+  const session = request.cookies.get(COOKIE);
+  const valid = session?.value && session.value === process.env.AUTH_PASSWORD;
 
-  if (!sessionCookie) {
+  if (!valid) {
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('callbackUrl', pathname);
     return NextResponse.redirect(loginUrl);

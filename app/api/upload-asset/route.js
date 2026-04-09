@@ -1,11 +1,16 @@
-import { getServerSession } from 'next-auth';
+import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 import { uploadAsset } from '@/lib/storyblok';
 
+function isAuthenticated() {
+  const jar = cookies();
+  const session = jar.get('ppc_session');
+  return session?.value === process.env.AUTH_PASSWORD;
+}
+
 export async function POST(request) {
-  const session = await getServerSession();
-  if (!session) {
+  if (!isAuthenticated()) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -17,11 +22,9 @@ export async function POST(request) {
   }
 
   const buffer = Buffer.from(await file.arrayBuffer());
-  const filename = file.name;
-  const mimeType = file.type || 'application/octet-stream';
 
   try {
-    const asset = await uploadAsset(buffer, filename, mimeType);
+    const asset = await uploadAsset(buffer, file.name, file.type || 'application/octet-stream');
     return NextResponse.json({ ok: true, asset });
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 });

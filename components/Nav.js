@@ -1,17 +1,23 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { signOut, useSession } from 'next-auth/react';
+import { usePathname, useRouter } from 'next/navigation';
 
 export default function Nav() {
   const pathname = usePathname();
-  const { data: session } = useSession();
+  const router = useRouter();
 
   const links = [
     { href: '/', label: 'Create Partner Page' },
     { href: '/asset-generator', label: 'Asset Generator' },
   ];
+
+  async function handleSignOut() {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    router.push('/login');
+  }
+
+  if (pathname === '/login') return null;
 
   return (
     <nav className="border-b border-gray-200 bg-white">
@@ -32,17 +38,12 @@ export default function Nav() {
             </Link>
           ))}
         </div>
-        {session && (
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-gray-400">{session.user?.email}</span>
-            <button
-              onClick={() => signOut()}
-              className="text-xs text-gray-400 underline hover:text-gray-700"
-            >
-              Sign out
-            </button>
-          </div>
-        )}
+        <button
+          onClick={handleSignOut}
+          className="text-xs text-gray-400 underline hover:text-gray-700"
+        >
+          Sign out
+        </button>
       </div>
     </nav>
   );
