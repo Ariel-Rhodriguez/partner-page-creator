@@ -3,14 +3,14 @@ import { NextResponse } from 'next/server';
 
 import { uploadAsset } from '@/lib/storyblok';
 
-function isAuthenticated() {
-  const jar = cookies();
+async function isAuthenticated() {
+  const jar = await cookies();
   const session = jar.get('ppc_session');
   return session?.value === process.env.AUTH_PASSWORD;
 }
 
 export async function POST(request) {
-  if (!isAuthenticated()) {
+  if (!await isAuthenticated()) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
