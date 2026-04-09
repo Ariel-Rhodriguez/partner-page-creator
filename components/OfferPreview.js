@@ -46,7 +46,7 @@ export default function OfferPreview() {
 
   const allBullets = [
     ...offerBullets.filter(Boolean),
-    ...(includeCashback ? ['Up to cashback.default cashback*'] : []),
+    ...(includeCashback ? ['Up to 1.5% cashback*'] : []),
   ];
 
   return (

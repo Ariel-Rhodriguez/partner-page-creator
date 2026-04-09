@@ -47,7 +47,7 @@ export default function HeroPreview() {
           )}
 
           <h1
-            className={`text-4xl md:text-5xl font-normal tracking-tight leading-tight mb-5 ${
+            className={`text-4xl md:text-5xl font-normal tracking-tight leading-tight mb-5 max-w-[14ch] mx-auto ${
               isPlaceholder ? 'text-[#b0b7b3] italic' : 'text-[#1a1f1d]'
             }`}
           >

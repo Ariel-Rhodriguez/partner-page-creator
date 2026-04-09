@@ -199,6 +199,7 @@ export default function CreatePartnerPage() {
   const [status, setStatus] = useState(null);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
+  const [uploadedAssets, setUploadedAssets] = useState(null);
 
   useEffect(() => {
     if (!partnerName) return;
@@ -225,13 +226,18 @@ export default function CreatePartnerPage() {
     }
 
     try {
-      setStatus('uploading');
+      let assets = uploadedAssets;
 
-      const [eyebrow, splitImage, ogImage] = await Promise.all([
-        eyebrowFile ? uploadFile(eyebrowFile, 'image') : Promise.resolve(null),
-        splitImageFile ? uploadFile(splitImageFile, 'image') : Promise.resolve(null),
-        ogImageFile ? uploadFile(ogImageFile, 'og') : Promise.resolve(null),
-      ]);
+      if (!assets) {
+        setStatus('uploading');
+        const [eyebrow, splitImage, ogImage] = await Promise.all([
+          eyebrowFile ? uploadFile(eyebrowFile, 'image') : Promise.resolve(null),
+          splitImageFile ? uploadFile(splitImageFile, 'image') : Promise.resolve(null),
+          ogImageFile ? uploadFile(ogImageFile, 'og') : Promise.resolve(null),
+        ]);
+        assets = { eyebrow, splitImage, ogImage };
+        setUploadedAssets(assets);
+      }
 
       setStatus('creating');
 
@@ -250,7 +256,7 @@ export default function CreatePartnerPage() {
             offerBullets: offerBullets.filter(Boolean),
             includeCashback,
           },
-          assets: { eyebrow, splitImage, ogImage },
+          assets,
         }),
       });
 
@@ -351,7 +357,7 @@ export default function CreatePartnerPage() {
                 label="Open Graph Image"
                 hint="Upload the OG image from the Asset Generator. Recommended 2400×1260 JPG."
                 value={ogImageFile}
-                onChange={setOgImageFile}
+                onChange={(f) => { setOgImageFile(f); setUploadedAssets(null); }}
                 accept="image/*"
               />
             </SectionCard>
@@ -386,7 +392,7 @@ export default function CreatePartnerPage() {
                 label="Eyebrow Icon (Partner Logo — Light)"
                 hint="Optional. Upload the light-background logo from the Asset Generator."
                 value={eyebrowFile}
-                onChange={setEyebrowFile}
+                onChange={(f) => { setEyebrowFile(f); setUploadedAssets(null); }}
                 accept="image/*"
               />
             </SectionCard>
@@ -408,7 +414,7 @@ export default function CreatePartnerPage() {
                 hint="Upload the dark-background logo from the Asset Generator."
                 required
                 value={splitImageFile}
-                onChange={setSplitImageFile}
+                onChange={(f) => { setSplitImageFile(f); setUploadedAssets(null); }}
                 accept="image/*"
               />
 
