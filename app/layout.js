@@ -13,7 +13,7 @@ export default function RootLayout({ children }) {
       <body className="min-h-screen bg-gray-50 text-gray-900 antialiased">
         <FormStateProvider>
           <Nav />
-          <main className="mx-auto max-w-5xl px-6 py-8">{children}</main>
+          <main className="mx-auto max-w-7xl px-6 py-8">{children}</main>
         </FormStateProvider>
       </body>
     </html>

@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { useFormState } from '@/components/FormStateProvider';
+import HeroPreview from '@/components/HeroPreview';
+import OfferPreview from '@/components/OfferPreview';
 
 // ─── Small UI helpers ──────────────────────────────────────────────────────────
 
@@ -340,99 +342,113 @@ export default function CreatePartnerPage() {
           />
         </SectionCard>
 
-        {/* Hero */}
-        <SectionCard
-          title="Hero Section"
-          description="Top section with the main headline and partner logo."
-        >
-          <div>
-            <Label required>Hero Heading</Label>
-            <Input
-              value={heroHeading}
-              onChange={(e) => setHeroHeading(e.target.value)}
-              placeholder="e.g. Special offer for N Ventures founders"
-              required
-            />
-            <Hint>
-              Include &quot;founders&quot; at the end — e.g.{' '}
-              <em>Special offer for N Ventures founders</em>, not just{' '}
-              <em>Special offer for N Ventures</em>.
-            </Hint>
-          </div>
-          <ImageUploadField
-            label="Eyebrow Icon (Partner Logo — Light)"
-            hint="Optional. Upload the light-background logo from the Asset Generator."
-            value={eyebrowFile}
-            onChange={setEyebrowFile}
-            accept="image/*"
-          />
-        </SectionCard>
-
-        {/* Offer Details */}
-        <SectionCard
-          title="Offer Details"
-          description="Defines the incentives shown in the 'What [Partner] founders receive' section."
-        >
-          <ImageUploadField
-            label="Partner Logo — Dark (Split Column Image)"
-            hint="Upload the dark-background logo from the Asset Generator."
-            value={splitImageFile}
-            onChange={setSplitImageFile}
-            accept="image/*"
-          />
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label required>Minimum Balance Requirement</Label>
-              <Input
-                value={offerAmount}
-                onChange={(e) => setOfferAmount(e.target.value)}
-                placeholder="e.g. $100,000.00"
-                required
+        {/* Hero — form left, preview right */}
+        <div className="flex gap-6 items-start">
+          <div className="w-96 flex-shrink-0">
+            <SectionCard
+              title="Hero Section"
+              description="Top section with the main headline and partner logo."
+            >
+              <div>
+                <Label required>Hero Heading</Label>
+                <Input
+                  value={heroHeading}
+                  onChange={(e) => setHeroHeading(e.target.value)}
+                  placeholder="e.g. Special offer for N Ventures founders"
+                  required
+                />
+                <Hint>
+                  Include &quot;founders&quot; at the end — e.g.{' '}
+                  <em>Special offer for N Ventures founders</em>, not just{' '}
+                  <em>Special offer for N Ventures</em>.
+                </Hint>
+              </div>
+              <ImageUploadField
+                label="Eyebrow Icon (Partner Logo — Light)"
+                hint="Optional. Upload the light-background logo from the Asset Generator."
+                value={eyebrowFile}
+                onChange={setEyebrowFile}
+                accept="image/*"
               />
-              <Hint>Include $ and formatting, e.g. $100,000.00</Hint>
-            </div>
-            <div>
-              <Label required>Qualifying Period (Days)</Label>
-              <Input
-                type="number"
-                value={offerDays}
-                onChange={(e) => setOfferDays(e.target.value)}
-                min="1"
-                placeholder="90"
-                required
-              />
-              <Hint>Updates the page disclaimer automatically.</Hint>
-            </div>
+            </SectionCard>
           </div>
+          <div className="flex-1 min-w-0 sticky top-6">
+            <HeroPreview />
+          </div>
+        </div>
 
-          <div>
-            <Label required>Incentive Bullets</Label>
-            <Hint>Add each reward the partner&apos;s founders will receive.</Hint>
-            <div className="mt-2">
-              <BulletListField bullets={offerBullets} onChange={setOfferBullets} />
-            </div>
-          </div>
-
-          <div>
-            <Label>Cashback Offer</Label>
-            <div className="mt-2 flex items-start gap-3 rounded-lg border border-gray-200 p-3">
-              <input
-                id="cashback"
-                type="checkbox"
-                checked={includeCashback}
-                onChange={(e) => setIncludeCashback(e.target.checked)}
-                className="mt-0.5 h-4 w-4 rounded border-gray-300 text-blue-600"
+        {/* Offer Details — form left, preview right */}
+        <div className="flex gap-6 items-start">
+          <div className="w-96 flex-shrink-0">
+            <SectionCard
+              title="Offer Details"
+              description="Defines the incentives shown in the 'What [Partner] founders receive' section."
+            >
+              <ImageUploadField
+                label="Partner Logo — Dark (Split Column Image)"
+                hint="Upload the dark-background logo from the Asset Generator."
+                value={splitImageFile}
+                onChange={setSplitImageFile}
+                accept="image/*"
               />
-              <label htmlFor="cashback" className="cursor-pointer text-sm text-gray-700">
-                Include cashback bullet
-                <span className="mt-0.5 block text-xs text-gray-400">
-                  Adds: <em>Up to cashback.default cashback*</em>
-                </span>
-              </label>
-            </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label required>Minimum Balance Requirement</Label>
+                  <Input
+                    value={offerAmount}
+                    onChange={(e) => setOfferAmount(e.target.value)}
+                    placeholder="e.g. $100,000.00"
+                    required
+                  />
+                  <Hint>Include $ and formatting, e.g. $100,000.00</Hint>
+                </div>
+                <div>
+                  <Label required>Qualifying Period (Days)</Label>
+                  <Input
+                    type="number"
+                    value={offerDays}
+                    onChange={(e) => setOfferDays(e.target.value)}
+                    min="1"
+                    placeholder="90"
+                    required
+                  />
+                  <Hint>Updates the page disclaimer automatically.</Hint>
+                </div>
+              </div>
+
+              <div>
+                <Label required>Incentive Bullets</Label>
+                <Hint>Add each reward the partner&apos;s founders will receive.</Hint>
+                <div className="mt-2">
+                  <BulletListField bullets={offerBullets} onChange={setOfferBullets} />
+                </div>
+              </div>
+
+              <div>
+                <Label>Cashback Offer</Label>
+                <div className="mt-2 flex items-start gap-3 rounded-lg border border-gray-200 p-3">
+                  <input
+                    id="cashback"
+                    type="checkbox"
+                    checked={includeCashback}
+                    onChange={(e) => setIncludeCashback(e.target.checked)}
+                    className="mt-0.5 h-4 w-4 rounded border-gray-300 text-blue-600"
+                  />
+                  <label htmlFor="cashback" className="cursor-pointer text-sm text-gray-700">
+                    Include cashback bullet
+                    <span className="mt-0.5 block text-xs text-gray-400">
+                      Adds: <em>Up to cashback.default cashback*</em>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </SectionCard>
           </div>
-        </SectionCard>
+          <div className="flex-1 min-w-0 sticky top-6">
+            <OfferPreview />
+          </div>
+        </div>
 
         {/* Submit */}
         <div className="flex items-center justify-between rounded-xl border border-gray-200 bg-white px-6 py-4 shadow-sm">
