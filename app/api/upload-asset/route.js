@@ -27,6 +27,7 @@ export async function POST(request) {
     const asset = await uploadAsset(buffer, file.name, file.type || 'application/octet-stream');
     return NextResponse.json({ ok: true, asset });
   } catch (err) {
+    console.error('[upload-asset]', err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
