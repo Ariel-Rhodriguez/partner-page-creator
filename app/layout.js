@@ -1,4 +1,5 @@
 import './globals.css';
+import { FormStateProvider } from '@/components/FormStateProvider';
 import Nav from '@/components/Nav';
 
 export const metadata = {
@@ -10,8 +11,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className="min-h-screen bg-gray-50 text-gray-900 antialiased">
-        <Nav />
-        <main className="mx-auto max-w-5xl px-6 py-8">{children}</main>
+        <FormStateProvider>
+          <Nav />
+          <main className="mx-auto max-w-5xl px-6 py-8">{children}</main>
+        </FormStateProvider>
       </body>
     </html>
   );
