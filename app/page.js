@@ -278,7 +278,7 @@ export default function CreatePartnerPage() {
       <div>
         <h1 className="text-lg font-semibold text-gray-900">Create Partner Page</h1>
         <p className="mt-1 text-sm text-gray-500">
-          Fills in the partner-specific content and creates a <strong>draft</strong> page in
+          Fills in the partner-specific content and publishes a page in
           Storyblok under the{' '}
           <code className="rounded bg-gray-100 px-1 text-xs">en/partner/</code> directory.
         </p>
@@ -286,12 +286,18 @@ export default function CreatePartnerPage() {
 
       {status === 'done' && result && (
         <div className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
-          <p className="font-medium">Draft page created successfully.</p>
-          <p className="mt-0.5 text-xs">
-            Slug: <code className="rounded bg-green-100 px-1">{result.full_slug}</code> &mdash;
-            Story ID: <code className="rounded bg-green-100 px-1">{result.id}</code>
+          <p className="font-medium">Page published successfully.</p>
+          <p className="mt-1 text-xs">
+            Once published, the page will be live at:{' '}
+            <a
+              href={`https://www.rho.co/partner/${slug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium underline hover:text-green-900"
+            >
+              www.rho.co/partner/{slug}
+            </a>
           </p>
-          <p className="mt-1 text-xs text-green-700">Open Storyblok to review and publish when ready.</p>
         </div>
       )}
 
@@ -479,8 +485,7 @@ export default function CreatePartnerPage() {
         {/* Submit */}
         <div className="flex items-center justify-between rounded-xl border border-gray-200 bg-white px-6 py-4 shadow-sm">
           <p className="text-xs text-gray-400">
-            The page will be saved as a <strong>draft</strong> in Storyblok for review before
-            publishing.
+            The page will be published immediately and available at the link above.
           </p>
           <button
             type="submit"
@@ -497,7 +502,7 @@ export default function CreatePartnerPage() {
               ? 'Uploading assets…'
               : status === 'creating'
               ? 'Creating page…'
-              : 'Create Draft Page'}
+              : 'Publish Page'}
           </button>
         </div>
       </form>
